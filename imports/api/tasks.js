@@ -10,11 +10,11 @@ if (Meteor.isServer) {
     Tasks.before.find(function (userId, selector, options) {
         console.log(`User ID is: ${userId}, semaphore is: ${semaphore}`);
     });
-    
+
     Meteor.publishComposite('allUsersAndTasks', function () {
         return {
             find() {
-                // Here userId in find hook will not be undefined in hook
+                // Just get all tasks to see that userId is not undefined when hook called in parent find
                 semaphore = 'parent-find';
                 const allTasks = Tasks.find({});
                 semaphore = 'child-find';
@@ -24,7 +24,7 @@ if (Meteor.isServer) {
                 {
                     find(user) {
 
-                        // Here I userId will be undefined
+                        // But there hook will be called bu userId in hook will be undefined
                         return Tasks.find({
                             userId: user._id
                         });
